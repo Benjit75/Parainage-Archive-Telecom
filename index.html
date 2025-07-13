@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tutoring Visualization</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page-container">
+  <header>
+    <h1>Parainage Archive Project</h1>
+  </header>
+
+  <main>
+    <svg id="graph-svg"></svg>
+    <aside id="side-panel">
+      <h2>Filter by Year</h2>
+      <select id="year-filter">
+        <option value="all">All Years</option>
+      </select>
+    </aside>
+  </main>
+
+  <footer>
+    <p>Contact: benjamin.ternot@telecom-paris.fr &mdash; &copy; Parainage Archive Project</p>
+  </footer>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="module" src="script.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="module" src="./graph/dataLoader.js"></script>
+</body>
+</html>

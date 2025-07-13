@@ -1,0 +1,217 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow-x: auto;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    background: linear-gradient(120deg, #eaf1fb 0%, #f8f9fa 100%);
+    color: #2d5d87;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-width: 800px; /* Enough for graph and side panel */
+}
+
+header {
+    background: #2d5d87;
+    color: #fff;
+    padding: 0.75rem 1.2rem;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 8px rgba(45,93,135,0.08);
+}
+
+footer {
+    background: #2d5d87;
+    color: #fff;
+    text-align: center;
+    padding: 0.5rem 1.2rem;
+    font-size: 1rem;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -2px 8px rgba(45,93,135,0.08);
+}
+
+main {
+    display: flex;
+    flex: 1;
+    overflow-x: auto;
+    padding: 12px;
+    gap: 12px;
+}
+
+/* SVG Graph */
+#graph-svg {
+    flex: 1 1 auto;
+    min-width: 500px;
+    min-height: 300px;
+    background: linear-gradient(120deg, #ccc 0%, #eee 100%);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(79,140,255,0.10);
+    transition: box-shadow 0.2s;
+}
+
+#graph-svg:focus-within {
+    box-shadow: 0 8px 32px rgba(79,140,255,0.18);
+}
+
+/* Side Panel */
+#side-panel {
+    width: 250px;
+    min-width: 250px;
+    background: #eee;
+    display: flex;
+    flex-direction: column;
+    padding: 32px 24px 0 24px;
+    gap: 18px;
+    box-shadow: -2px 0 16px rgba(0,0,0,0.08);
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+    overflow-y: auto;
+}
+
+#side-panel h2 {
+    margin: 0 0 12px 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #2d5d87;
+}
+
+#side-panel label {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #2d5d87;
+}
+
+#side-panel select,
+#side-panel input,
+#side-panel textarea {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #eaf1fb;
+    border-radius: 8px;
+    background: #f8f9fa;
+    color: #2d5d87;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(79,140,255,0.07);
+    transition: box-shadow 0.2s, background 0.2s;
+    outline: none;
+}
+
+#side-panel select:focus,
+#side-panel input:focus,
+#side-panel textarea:focus {
+    background: #eaf1fb;
+    box-shadow: 0 2px 8px rgba(79,140,255,0.15);
+}
+
+#side-panel button {
+    background: linear-gradient(90deg, #4f8cff 0%, #6ed6ff 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(79,140,255,0.08);
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 8px;
+}
+
+#side-panel button:hover {
+    background: linear-gradient(90deg, #357ae8 0%, #4fd1ff 100%);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 4px 16px rgba(79,140,255,0.15);
+}
+
+#side-panel form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#year-filter {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #eaf1fb;
+    color: #2d5d87;
+    box-shadow: 0 1px 4px rgba(79,140,255,0.07);
+    transition: box-shadow 0.2s, background 0.2s;
+    appearance: none;
+    outline: none;
+}
+
+#year-filter:focus {
+    background: #d2e6fa;
+    box-shadow: 0 2px 8px rgba(79,140,255,0.15);
+}
+
+.student circle {
+    fill: #4f8bc9;
+    stroke: #2d5d87;
+    stroke-width: 2px;
+}
+
+.student text {
+    fill: white;
+    font-size: 12px;
+    pointer-events: none;
+    text-anchor: middle;
+}
+
+.graph-btn {
+    transition: opacity 0.2s;
+    pointer-events: all;
+    opacity: 0.3;
+}
+
+.graph-btn:hover {
+    opacity: 1;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    background: #eaf1fb;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #b3d0f7;
+    border-radius: 8px;
+}
+
+/* Form Buttons */
+form button {
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+form button[type="button"] {
+    background: #eee;
+    color: #333;
+}
+form button:hover {
+    background: #1565c0;
+}
+form button[type="button"]:hover {
+    background: #ccc;
+}
+
+.form-actions .cancel-btn {
+    order: -1;
+}
