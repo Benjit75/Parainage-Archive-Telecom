@@ -3,6 +3,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import {
     loadGraphData,
     getFamilies,
+    getStudents,
     createStudentSelect,
     createFamilySelect,
     addStudent,
@@ -320,7 +321,7 @@ import {
         familyNewFields.style.flexDirection = 'column';
         familyNewFields.innerHTML = `
         <input name="family_name" placeholder="Family name">
-        <input name="family_year" placeholder="Year">
+        <input name="family_year" placeholder="Year - format 20YY/20YY+1">
         <input name="family_color" placeholder="Color">
     `;
         form.appendChild(familyNewFields);
@@ -376,9 +377,28 @@ import {
             // Mentor
             let mentorId;
             if (mentorSelect.value === "__new__") {
-                const first = form.elements["mentor_first"].value;
-                const last = form.elements["mentor_last"].value;
-                const promo = form.elements["mentor_promo"].value;
+                const first = form.elements["mentor_first"].value.trim();
+                const last = form.elements["mentor_last"].value.trim();
+                const promo = form.elements["mentor_promo"].value.trim();
+                // Basic validation for promo as year
+                if (!/^20\d{2}$/.test(promo)) {
+                    alert('Promo must be a 4-digit year, e.g. 2023');
+                    console.info(`Invalid promo format (expected 4-digit year): ${promo}`);
+                    return;
+                }
+                // ensure it is not already in the list
+                const studs = await getStudents();
+                // Compare as strings
+                const stu = studs.find(f =>
+                    f.firstName.toLowerCase() === first.toLowerCase()
+                    && f.lastName.toLowerCase() === last.toLowerCase()
+                    && f.promo === promo
+                );
+                if (stu) {
+                    alert(`Student ${first} ${last} (${promo}) already exists. Please select them from the list.`);
+                    console.info(`Student already exists: ${first} ${last} (${promo})`);
+                    return;
+                }
                 mentorId = (await addStudent(first, last, promo)).id;
             } else {
                 mentorId = Number(mentorSelect.value);
@@ -386,19 +406,80 @@ import {
             // Tutored
             let tutoredId;
             if (tutoredSelect.value === "__new__") {
-                const first = form.elements["tutored_first"].value;
-                const last = form.elements["tutored_last"].value;
-                const promo = form.elements["tutored_promo"].value;
+                const first = form.elements["tutored_first"].value.trim();
+                const last = form.elements["tutored_last"].value.trim();
+                const promo = form.elements["tutored_promo"].value.trim();
+                // Basic validation for promo as year
+                if (!/^20\d{2}$/.test(promo)) {
+                    alert('Promo must be a 4-digit year, e.g. 2023');
+                    console.info(`Invalid promo format (expected 4-digit year): ${promo}`);
+                    return;
+                }
+                // ensure it is not already in the list
+                const studs = await getStudents();
+                // Compare as strings
+                const stu = studs.find(f =>
+                    f.firstName.toLowerCase() === first.toLowerCase()
+                    && f.lastName.toLowerCase() === last.toLowerCase()
+                    && String(f.promo) === promo
+                );
+                if (stu) {
+                    alert(`Student ${first} ${last} (${promo}) already exists. Please select them from the list.`);
+                    console.info(`Student already exists: ${first} ${last} (${promo})`);
+                    return;
+                }
                 tutoredId = (await addStudent(first, last, promo)).id;
             } else {
                 tutoredId = Number(tutoredSelect.value);
             }
+            // Ensure mentor and tutored should be different
+            if (mentorId === tutoredId) {
+                alert('Mentor and tutored student cannot be the same person.');
+                console.info('Mentor and tutored student are the same.');
+                return;
+            }
+
             // Family
             let familyName, familyYear, familyColor;
             if (familySelect.value === "__new__") {
-                familyName = form.elements["family_name"].value;
-                familyYear = form.elements["family_year"].value;
-                familyColor = form.elements["family_color"].value;
+                familyName = form.elements["family_name"].value.trim();
+                familyYear = form.elements["family_year"].value.trim();
+                familyColor = form.elements["family_color"].value.trim().toLowerCase();
+                // ensure correct format for year 20YY/20YY+1
+                if (!/^20\d{2}\/20\d{2}$/.test(familyYear) || (parseInt(familyYear.split('/')[1], 10) !== parseInt(familyYear.split('/')[0], 10) + 1)) {
+                    alert('Year must be in format 20YY/20YY+1, e.g. 2023/2024');
+                    console.info(`Invalid year format (expected 20YY/20YY+1, e.g. 2023/2024): ${familyYear}`);
+                    return;
+                }
+                // ensure color starts with # or is a valid color name
+                if (familyColor && !/^#([0-9A-F]{3}){1,2}$/i.test(familyColor)){
+                    if (!/^[a-zA-Z]+$/.test(familyColor)) {
+                        alert('Color must be a valid hex code (e.g. #FF5733) or color name (e.g. red)');
+                        console.info(`Invalid color format (expected hex code or color name): ${familyColor}`);
+                        return;
+                    } else {
+                        // ensure color name exists in browser
+                        const s = new Option().style;
+                        s.color = familyColor;
+                        if (s.color === '') {
+                            alert('Color name is not recognized. Please use a valid color name or hex code.');
+                            console.info(`Unrecognized color name: ${familyColor}`);
+                            return;
+                        }
+                    }
+                }
+                // ensure it is not already in the list
+                const fams = await getFamilies();
+                // Compare as strings
+                const fam = fams.find(f =>
+                    f.name.toLowerCase() === familyName.toLowerCase()
+                    && String(f.year) === familyYear
+                );
+                if (fam) {
+                    alert(`Family ${familyName} (${familyYear}) already exists. Please select it from the list.`);
+                    console.info(`Family already exists: ${familyName} (${familyYear})`);
+                    return;
+                }
             } else {
                 const [name, year] = familySelect.value.split("--");
                 const fams = await getFamilies();
